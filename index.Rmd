@@ -1,0 +1,47 @@
+---
+title: "Meteorites impact report"
+author: "dwerbam"
+date: "2019-10-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, warning=FALSE, include=FALSE}
+library(tidyr)
+library(dplyr)
+library(plotly)
+library(leaflet)
+```
+
+## Source:
+https://github.com/rfordatascience/tidytuesday/blob/83cceb491ff93ef2d8cb650ec519f03b8e5f7575/data/2019/2019-06-11/readme.md
+
+Dataset all about meteorites, where they fell and when they fell! Data comes from the Meteoritical Society by way of NASA
+
+```{r, comment=""}
+meteorites <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-11/meteorites.csv") %>% select(lat, long, year, mass)
+head(meteorites)
+```
+
+
+```{r}
+
+leafIcons <- icons(
+  iconUrl = "https://freeicons.io/icon/download?icon_id=8806&type=original&size=64",
+  iconWidth = 64, iconHeight = 64,
+  iconAnchorX = 64, iconAnchorY = 64
+)
+
+meteorites %>%
+    leaflet() %>% 
+    addTiles() %>%
+    addMarkers(~long, ~lat, popup = ~as.character(year), 
+               label = ~as.character(year), clusterOptions = markerClusterOptions(), 
+               icon = leafIcons)
+
+```
+
+
